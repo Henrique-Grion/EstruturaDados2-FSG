@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Arvores.Ed
 {
-	public class ArvoreBST
+	public class BSTTree
 	{
 		private No _raiz;
 
-		public void Adicionar(int valor)
+		public void Insert(int valor)
 		{
 			No no = new No(valor);
 			if (_raiz == null)
@@ -18,9 +18,9 @@ namespace Arvores.Ed
 				_raiz = no;
 				return;
 			}
-			Adicionar(no, _raiz);
+			Insert(no, _raiz);
 		}
-		private void Adicionar(No novoNo, No referencia)
+		private void Insert(No novoNo, No referencia)
 		{
 			if (novoNo.Valor > referencia.Valor)
 			{
@@ -30,7 +30,7 @@ namespace Arvores.Ed
 				}
 				else
 				{
-					Adicionar(novoNo, referencia.Maior);
+					Insert(novoNo, referencia.Maior);
 				}
 			}
 			else
@@ -41,19 +41,19 @@ namespace Arvores.Ed
 				}
 				else
 				{
-					Adicionar(novoNo, referencia.Menor);
+					Insert(novoNo, referencia.Menor);
 				}
 			}
 		}
 
-		public bool Remover(int valor)
+		public bool Remove(int valor)
 		{
 			bool removido;
-			_raiz = Remover(_raiz, valor, out removido);
+			_raiz = Remove(_raiz, valor, out removido);
 			return removido;
 		}
 
-		private No Remover(No referencia, int valor, out bool removido)
+		private No Remove(No referencia, int valor, out bool removido)
 		{
 			if (referencia == null)
 			{
@@ -63,11 +63,11 @@ namespace Arvores.Ed
 
 			if (valor < referencia.Valor)
 			{
-				referencia.Menor = Remover(referencia.Menor, valor, out removido);
+				referencia.Menor = Remove(referencia.Menor, valor, out removido);
 			}
 			else if (valor > referencia.Valor)
 			{
-				referencia.Maior = Remover(referencia.Maior, valor, out removido);
+				referencia.Maior = Remove(referencia.Maior, valor, out removido);
 			}
 			else
 			{
@@ -84,7 +84,7 @@ namespace Arvores.Ed
 
 				novoNo.Menor = referencia.Menor;
 
-				novoNo.Maior = Remover(referencia.Maior, sucessor.Valor, out _);
+				novoNo.Maior = Remove(referencia.Maior, sucessor.Valor, out _);
 
 				return novoNo;
 			}

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Arvores.Ed
 {
-	public class ArvoreAVL
+	public class AVLTree
 	{
 		private No _raiz;
 
-		public void Adicionar(int valor) => _raiz = Adicionar(_raiz, valor);
+		public void Insert(int valor) => _raiz = Insert(_raiz, valor);
 
-		public void Remover(int valor) => _raiz = Remover(_raiz, valor);
+		public void Remove(int valor) => _raiz = Remove(_raiz, valor);
 
 		public bool Contem(int valor) => Contem(_raiz, valor);
 
@@ -41,23 +41,23 @@ namespace Arvores.Ed
 			return y;
 		}
 
-		private No Adicionar(No no, int valor)
+		private No Insert(No no, int valor)
 		{
 			if (no == null) return new No(valor);
 
-			if (valor < no.Valor) no.Menor = Adicionar(no.Menor, valor);
-			else if (valor > no.Valor) no.Maior = Adicionar(no.Maior, valor);
+			if (valor < no.Valor) no.Menor = Insert(no.Menor, valor);
+			else if (valor > no.Valor) no.Maior = Insert(no.Maior, valor);
 			else return no; // Duplicatas não permitidas
 
 			return Balancear(no);
 		}
 
-		private No Remover(No no, int valor)
+		private No Remove(No no, int valor)
 		{
 			if (no == null) return null;
 
-			if (valor < no.Valor) no.Menor = Remover(no.Menor, valor);
-			else if (valor > no.Valor) no.Maior = Remover(no.Maior, valor);
+			if (valor < no.Valor) no.Menor = Remove(no.Menor, valor);
+			else if (valor > no.Valor) no.Maior = Remove(no.Maior, valor);
 			else
 			{
 				if (no.Menor == null || no.Maior == null)
@@ -67,7 +67,7 @@ namespace Arvores.Ed
 					No sucessor = ObterMenor(no.Maior);
 					No novoNo = new No(sucessor.Valor);
 					novoNo.Menor = no.Menor;
-					novoNo.Maior = Remover(no.Maior, sucessor.Valor);
+					novoNo.Maior = Remove(no.Maior, sucessor.Valor);
 					no = novoNo;
 				}
 			}
