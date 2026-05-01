@@ -1,4 +1,4 @@
-﻿namespace Arvores.Ed;
+﻿namespace Trees.DataStructures;
 
 public class BTree<TKey, TValue> where TKey : IComparable<TKey>
 {
@@ -15,7 +15,7 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         }
     }
 
-    private readonly int _t; // grau mínimo
+    private readonly int _t;
     private Node _root;
 
     public BTree(int t)
@@ -27,9 +27,6 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         _root = new Node(true);
     }
 
-    // -------------------------------
-    // BUSCA
-    // -------------------------------
     public bool TryGetValue(TKey key, out TValue value)
     {
         return Search(_root, key, out value);
@@ -57,9 +54,6 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         return Search(node.Children[i], key, out value);
     }
 
-    // -------------------------------
-    // INSERÇÃO
-    // -------------------------------
     public void Insert(TKey key, TValue value)
     {
         Node r = _root;
@@ -76,6 +70,38 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         {
             InsertNonFull(r, key, value);
         }
+    }
+
+    public bool Remove(TKey key)
+    {
+        var items = new List<KeyValuePair<TKey, TValue>>();
+        CollectPairsInOrder(_root, items);
+
+        bool removed = false;
+        var filtered = new List<KeyValuePair<TKey, TValue>>(items.Count);
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+
+            if (!removed && item.Key.CompareTo(key) == 0)
+            {
+                removed = true;
+                continue;
+            }
+
+            filtered.Add(item);
+        }
+
+        if (!removed)
+            return false;
+
+        _root = new Node(true);
+
+        for (int i = 0; i < filtered.Count; i++)
+            Insert(filtered[i].Key, filtered[i].Value);
+
+        return true;
     }
 
     private void InsertNonFull(Node node, TKey key, TValue value)
@@ -121,46 +147,55 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         Node full = parent.Children[index];
         Node newNode = new Node(full.Leaf);
 
-        // 1) Salvar a chave do meio ANTES de mexer no nó
         TKey middleKey = full.Keys[_t - 1];
         TValue middleValue = full.Values[_t - 1];
 
-        // 2) Copiar as chaves da metade direita para o novo nó
         for (int j = 0; j < _t - 1; j++)
         {
             newNode.Keys.Add(full.Keys[_t + j]);
             newNode.Values.Add(full.Values[_t + j]);
         }
 
-        // 3) Copiar os filhos da metade direita (se não for folha)
         if (!full.Leaf)
         {
             for (int j = 0; j < _t; j++)
                 newNode.Children.Add(full.Children[_t + j]);
         }
 
-        // 4) Remover a metade direita do nó cheio
         full.Keys.RemoveRange(_t, _t - 1);
         full.Values.RemoveRange(_t, _t - 1);
 
         if (!full.Leaf)
             full.Children.RemoveRange(_t, _t);
 
-        // 5) Remover a chave do meio do nó cheio
         full.Keys.RemoveAt(_t - 1);
         full.Values.RemoveAt(_t - 1);
 
-        // 6) Inserir o novo nó no pai
         parent.Children.Insert(index + 1, newNode);
 
-        // 7) Inserir a chave promovida no pai
         parent.Keys.Insert(index, middleKey);
         parent.Values.Insert(index, middleValue);
     }
 
-    // -------------------------------
-    // PERCURSO (para debug)
-    // -------------------------------
+    private void CollectPairsInOrder(Node node, List<KeyValuePair<TKey, TValue>> output)
+    {
+        if (node.Leaf)
+        {
+            for (int i = 0; i < node.Keys.Count; i++)
+                output.Add(new KeyValuePair<TKey, TValue>(node.Keys[i], node.Values[i]));
+
+            return;
+        }
+
+        for (int i = 0; i < node.Keys.Count; i++)
+        {
+            CollectPairsInOrder(node.Children[i], output);
+            output.Add(new KeyValuePair<TKey, TValue>(node.Keys[i], node.Values[i]));
+        }
+
+        CollectPairsInOrder(node.Children[node.Keys.Count], output);
+    }
+
     public void Print()
     {
         PrintNode(_root, 0);
@@ -177,3 +212,4 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
         }
     }
 }
+
