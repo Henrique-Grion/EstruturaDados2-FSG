@@ -1,6 +1,65 @@
-# Red‑Black Tree, B‑Tree e B+‑Tree
+# Estruturas de Arvores do Projeto
 
-Documentação técnica das três estruturas, escrita de forma objetiva e organizada.
+Documentacao tecnica das estruturas implementadas no projeto, escrita de forma objetiva e organizada.
+
+As implementacoes atuais incluem:
+- BST (Binary Search Tree)
+- AVL Tree
+- Red-Black Tree
+- B-Tree
+- B+-Tree
+
+---
+
+# BST (Binary Search Tree)
+
+## Visao geral
+A BST e uma arvore binaria de busca sem balanceamento automatico.
+
+## Caracteristicas
+- Para cada no: valores menores ficam na subarvore da esquerda e maiores na direita.
+- Operacoes de busca, insercao e remocao dependem da altura da arvore.
+- Em cenarios desfavoraveis pode degradar para comportamento linear.
+
+## Insercao
+1. Compara a chave com o no atual.
+2. Desce para esquerda ou direita ate encontrar posicao nula.
+3. Insere o novo no nessa posicao.
+
+## Remocao
+1. Remove diretamente se for folha.
+2. Substitui pelo unico filho quando houver apenas um.
+3. Usa sucessor em ordem quando houver dois filhos.
+
+## Aplicacoes
+- Base conceitual para arvores balanceadas.
+- Estruturas simples em memoria com baixo overhead.
+
+---
+
+# AVL Tree
+
+## Visao geral
+A AVL e uma arvore binaria de busca auto-balanceada.
+
+## Caracteristicas
+- Mantem fator de balanceamento entre -1 e 1 para cada no.
+- Garante altura O(log n).
+- Usa rotacoes para restaurar balanceamento.
+
+## Insercao
+1. Insere como uma BST.
+2. Atualiza balanceamento no retorno da recursao.
+3. Aplica rotacoes simples ou duplas quando necessario.
+
+## Remocao
+1. Remove como em BST.
+2. Recalcula fator de balanceamento nos ancestrais.
+3. Aplica rotacoes para manter a propriedade AVL.
+
+## Aplicacoes
+- Estruturas em memoria com busca previsivel.
+- Cenarios com muitas consultas e atualizacoes.
 
 ---
 
@@ -110,8 +169,10 @@ Isso simplifica o algoritmo e melhora a previsibilidade do acesso.
 
 # Comparação
 
-| Estrutura      | Onde ficam os valores | Encadeamento de folhas | Uso ideal |
-|----------------|------------------------|--------------------------|-----------|
-| Red‑Black Tree | Em todos os nós        | Não                      | Estruturas em memória |
-| B‑Tree         | Em todos os nós        | Não                      | Armazenamento em disco |
-| B+‑Tree        | Apenas nas folhas      | Sim                      | Bancos de dados e sistemas de arquivos |
+| Estrutura      | Balanceamento | Onde ficam os valores | Encadeamento de folhas | Uso ideal |
+|----------------|---------------|-----------------------|--------------------------|-----------|
+| BST            | Nao           | Em todos os nos       | Nao                      | Estruturas simples em memoria |
+| AVL Tree       | Sim (estrito) | Em todos os nos       | Nao                      | Busca em memoria com altura controlada |
+| Red‑Black Tree | Sim (relaxado)| Em todos os nos       | Nao                      | Estruturas ordenadas gerais em memoria |
+| B‑Tree         | Sim           | Em todos os nos       | Nao                      | Armazenamento em disco |
+| B+‑Tree        | Sim           | Apenas nas folhas     | Sim                      | Bancos de dados e range scan |

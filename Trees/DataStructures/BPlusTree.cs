@@ -1,4 +1,4 @@
-﻿namespace Arvores.Ed;
+﻿namespace Trees.DataStructures;
 
 public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
 {
@@ -21,7 +21,7 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         public override bool IsLeaf => true;
     }
 
-    private readonly int _t; // grau mínimo
+    private readonly int _t;
     private Node _root;
 
     public BPlusTree(int t)
@@ -33,9 +33,6 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         _root = new LeafNode();
     }
 
-    // ---------------------------------------------------------
-    // BUSCA
-    // ---------------------------------------------------------
     public bool TryGetValue(TKey key, out TValue value)
     {
         var leaf = FindLeaf(_root, key);
@@ -67,9 +64,6 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         return FindLeaf(internalNode.Children[i], key);
     }
 
-    // ---------------------------------------------------------
-    // INSERÇÃO
-    // ---------------------------------------------------------
     public void Insert(TKey key, TValue value)
     {
         var root = _root;
@@ -127,9 +121,33 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         }
     }
 
-    // ---------------------------------------------------------
-    // SPLIT
-    // ---------------------------------------------------------
+    public bool Remove(TKey key)
+    {
+        var items = new List<KeyValuePair<TKey, TValue>>();
+        bool removed = false;
+
+        foreach (var item in Scan())
+        {
+            if (!removed && item.Key.CompareTo(key) == 0)
+            {
+                removed = true;
+                continue;
+            }
+
+            items.Add(new KeyValuePair<TKey, TValue>(item.Key, item.Value));
+        }
+
+        if (!removed)
+            return false;
+
+        _root = new LeafNode();
+
+        for (int i = 0; i < items.Count; i++)
+            Insert(items[i].Key, items[i].Value);
+
+        return true;
+    }
+
     private void SplitChild(InternalNode parent, int index)
     {
         Node full = parent.Children[index];
@@ -146,7 +164,6 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
 
         int mid = _t;
 
-        // mover metade direita
         for (int i = mid; i < full.Keys.Count; i++)
         {
             newLeaf.Keys.Add(full.Keys[i]);
@@ -156,11 +173,9 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         full.Keys.RemoveRange(mid, full.Keys.Count - mid);
         full.Values.RemoveRange(mid, full.Values.Count - mid);
 
-        // encadear folhas
         newLeaf.Next = full.Next;
         full.Next = newLeaf;
 
-        // chave promovida (primeira da nova folha)
         TKey promoted = newLeaf.Keys[0];
 
         parent.Keys.Insert(index, promoted);
@@ -175,7 +190,6 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
 
         TKey promoted = full.Keys[mid];
 
-        // mover metade direita
         for (int i = mid + 1; i < full.Keys.Count; i++)
             newNode.Keys.Add(full.Keys[i]);
 
@@ -189,9 +203,6 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         parent.Children.Insert(index + 1, newNode);
     }
 
-    // ---------------------------------------------------------
-    // SCAN (range)
-    // ---------------------------------------------------------
     public IEnumerable<(TKey Key, TValue Value)> Scan()
     {
         var node = _root;
@@ -210,3 +221,4 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
         }
     }
 }
+

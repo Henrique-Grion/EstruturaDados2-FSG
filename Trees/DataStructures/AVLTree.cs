@@ -1,10 +1,10 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Arvores.Ed
+namespace Trees.DataStructures
 {
 	public class AVLTree
 	{
@@ -47,7 +47,7 @@ namespace Arvores.Ed
 
 			if (valor < no.Valor) no.Menor = Insert(no.Menor, valor);
 			else if (valor > no.Valor) no.Maior = Insert(no.Maior, valor);
-			else return no; // Duplicatas n„o permitidas
+			else return no; // Duplicatas n√£o permitidas
 
 			return Balancear(no);
 		}
@@ -183,14 +183,15 @@ namespace Arvores.Ed
 
 		public void ImprimirDadosArvore()
 		{
-			Console.WriteLine("\n¡rvore AVL:");
+			Console.WriteLine("\n√Årvore AVL:");
 			Console.WriteLine("Altura: " + Altura());
-			Console.WriteLine("Total de nÛs: " + ContarNos());
+			Console.WriteLine("Total de n√≥s: " + ContarNos());
 			Console.WriteLine("Total de folhas: " + ContarFolhas());
-			Console.WriteLine("Impress„o em nÌvel da ·rvore:");
+			Console.WriteLine("Impress√£o em n√≠vel da √°rvore:");
 			ImprimirEmNivel();
-			Console.WriteLine("Impress„o em ordem da ·rvore:");
+			Console.WriteLine("Impress√£o em ordem da √°rvore:");
 			ImprimirEmOrdem();
 		}
 	}
 }
+

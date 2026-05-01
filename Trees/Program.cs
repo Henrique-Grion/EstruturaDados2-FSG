@@ -1,4 +1,4 @@
-﻿using Arvores.Ed;
+﻿using Trees.DataStructures;
 
 BSTTree bstTree = new BSTTree();
 AVLTree avlTree = new AVLTree();
@@ -123,7 +123,8 @@ Console.WriteLine("\nRemover 5");
 bstTree.Remove(5);
 avlTree.Remove(5);
 rbTree.Remove(5);
-//bTree.Remove(5);
+bTree.Remove(5);
+bpTree.Remove(5);
 
 //Impressão das árvores em nível e em ordem 4
 bstTree.ImprimirDadosArvore();

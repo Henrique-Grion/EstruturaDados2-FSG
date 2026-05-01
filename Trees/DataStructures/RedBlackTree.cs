@@ -1,5 +1,5 @@
 ﻿
-namespace Arvores.Ed;
+namespace Trees.DataStructures;
 
 public enum NodeColor
 {
@@ -262,3 +262,4 @@ public class RedBlackTree<TKey, TValue> where TKey : IComparable<TKey>
         }
     }
 }
+
