@@ -220,5 +220,36 @@ public class BPlusTree<TKey, TValue> where TKey : IComparable<TKey>
             leaf = leaf.Next;
         }
     }
+
+    public void Print()
+    {
+        Console.WriteLine("\n=== Árvore B+ ===");
+        PrintNode(_root, 0);
+        Console.WriteLine();
+    }
+
+    private void PrintNode(Node node, int level)
+    {
+        string indent = new string(' ', level * 2);
+        Console.Write(indent);
+
+        if (node.IsLeaf)
+        {
+            Console.Write("[Folha] ");
+        }
+        else
+        {
+            Console.Write("[Interno] ");
+        }
+
+        Console.WriteLine(string.Join(", ", node.Keys));
+
+        if (!node.IsLeaf)
+        {
+            var internalNode = (InternalNode)node;
+            for (int i = 0; i < internalNode.Children.Count; i++)
+                PrintNode(internalNode.Children[i], level + 1);
+        }
+    }
 }
 

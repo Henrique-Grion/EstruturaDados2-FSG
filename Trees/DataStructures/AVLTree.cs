@@ -181,6 +181,46 @@ namespace Trees.DataStructures
 			Console.WriteLine();
 		}
 
+		public void Print()
+		{
+			Console.WriteLine("\n=== Árvore AVL ===");
+			if (_raiz == null)
+			{
+				Console.WriteLine("Árvore vazia.");
+				return;
+			}
+			PrintLevel(_raiz);
+			Console.WriteLine();
+		}
+
+		private void PrintLevel(No raiz)
+		{
+			Queue<(No no, int nivel)> fila = new Queue<(No, int)>();
+			fila.Enqueue((raiz, 0));
+			int nivelAtual = -1;
+
+			while (fila.Count > 0)
+			{
+				var (atual, nivel) = fila.Dequeue();
+
+				if (nivel > nivelAtual)
+				{
+					if (nivelAtual != -1) Console.WriteLine();
+					Console.Write($"Nível {nivel}: ");
+					nivelAtual = nivel;
+				}
+
+				Console.Write($"{atual.Valor} ");
+
+				if (atual.Menor != null)
+					fila.Enqueue((atual.Menor, nivel + 1));
+
+				if (atual.Maior != null)
+					fila.Enqueue((atual.Maior, nivel + 1));
+			}
+			Console.WriteLine();
+		}
+
 		public void ImprimirDadosArvore()
 		{
 			Console.WriteLine("\nÁrvore AVL:");

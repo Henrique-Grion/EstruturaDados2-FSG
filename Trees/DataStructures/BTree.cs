@@ -198,17 +198,29 @@ public class BTree<TKey, TValue> where TKey : IComparable<TKey>
 
     public void Print()
     {
+        Console.WriteLine("\n=== Árvore B ===");
+        if (_root == null || _root.Keys.Count == 0)
+        {
+            Console.WriteLine("Árvore vazia.");
+            return;
+        }
         PrintNode(_root, 0);
+        Console.WriteLine();
     }
 
     private void PrintNode(Node node, int level)
     {
-        Console.WriteLine(new string(' ', level * 2) + string.Join(", ", node.Keys));
+        string indent = new string(' ', level * 2);
+        string tipo = node.Leaf ? "[Folha]" : "[Nó]";
+        
+        Console.WriteLine($"{indent}{tipo} Chaves: [{string.Join(", ", node.Keys)}]");
 
         if (!node.Leaf)
         {
             for (int i = 0; i < node.Children.Count; i++)
+            {
                 PrintNode(node.Children[i], level + 1);
+            }
         }
     }
 }

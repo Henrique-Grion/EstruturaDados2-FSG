@@ -261,5 +261,52 @@ public class RedBlackTree<TKey, TValue> where TKey : IComparable<TKey>
             y.Left.Parent = y;
         }
     }
+
+    public void Print()
+    {
+        Console.WriteLine("\n=== Árvore Red-Black ===");
+        if (_root == null)
+        {
+            Console.WriteLine("Árvore vazia.");
+            return;
+        }
+        PrintLevel(_root);
+        Console.WriteLine();
+    }
+
+    private void PrintLevel(Node? root)
+    {
+        if (root == null) return;
+
+        Queue<(Node? node, int nivel)> fila = new Queue<(Node?, int)>();
+        fila.Enqueue((root, 0));
+        int nivelAtual = -1;
+
+        while (fila.Count > 0)
+        {
+            var (atual, nivel) = fila.Dequeue();
+
+            if (nivel > nivelAtual)
+            {
+                if (nivelAtual != -1) Console.WriteLine();
+                Console.Write($"Nível {nivel}: ");
+                nivelAtual = nivel;
+            }
+
+            if (atual != null)
+            {
+                string cor = atual.IsRed ? "R" : "B";
+                Console.Write($"[{atual.Key}:{cor}] ");
+
+                fila.Enqueue((atual.Left, nivel + 1));
+                fila.Enqueue((atual.Right, nivel + 1));
+            }
+            else
+            {
+                Console.Write("[null] ");
+            }
+        }
+        Console.WriteLine();
+    }
 }
 
